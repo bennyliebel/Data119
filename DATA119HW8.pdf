@@ -1,0 +1,106 @@
+DATA 119 HW8
+
+I used the empty cell in lab 8 to run all my sql code: https://posit.ds.uchicago.edu/sqllab/#section-resources
+
+As for determining the dimensions:
+I either looked at the table to determine rows/columns or calculated row count when it was too long
+
+
+1.a
+SELECT species_id, hindfoot_length, weight
+FROM surveys
+WHERE weight >= 80.0
+ORDER BY weight DESC;
+
+dimensions for 1.a
+SELECT COUNT(*) 
+FROM surveys
+WHERE weight >= 80.0;
+Dimensions for query 1.a are 3353 rows and 3 columns
+
+1.b
+SELECT COUNT(DISTINCT weight) AS num_weights
+FROM surveys;
+
+dimensions for 1.b
+Dimensions for query 1.b is 1 row and 1 column
+
+1.c
+SELECT record_id, species_id, hindfoot_length, weight
+FROM surveys
+WHERE hindfoot_length > weight;
+
+dimensions for 1.c
+SELECT COUNT(*) 
+FROM surveys
+WHERE hindfoot_length > weight;
+Dimensions for query 1.c is 9253 rows and 4 columns
+
+1.d
+SELECT  AVG(hindfoot_length) AS avg_hindfoot_length,  AVG(weight) AS avg_weight
+FROM surveys;
+
+dimensions for 1.d
+dimensions for query 1.d are 1 row and 2 columns
+
+1.e
+SELECT  species_id,  COUNT(*) AS num_obs
+FROM  surveys
+GROUP BY  species_id
+ORDER BY  num_obs DESC;
+
+dimensions for 1.e 
+dimensions for 1.e are 49 rows and 2 columns
+
+1.f
+SELECT species_id, COUNT(*) AS num_obs
+FROM surveys
+WHERE species_id IS NOT NULL AND TRIM(species_id) != ''
+GROUP BY species_id
+ORDER BY num_obs DESC;
+
+dimensions for 1.f  
+dimensions for query 1.f are 48 rows and 2 columns
+
+1.g    
+SELECT  sv.species_id,  sp.genus,  sp.species,  COUNT(*) AS num_obs,  AVG(sv.weight) AS avg_weight
+FROM surveys sv
+INNER JOIN species sp  ON sv.species_id = sp.species_id
+GROUP BY sv.species_id, sp.genus, sp.species
+ORDER BY num_obs DESC;
+
+dimensions for 1.g    
+dimensions for query 1.g are 48 rows and 5 columns 
+
+1.h 
+SELECT  sv.species_id,  sp.genus,  sp.species,  sp.taxa,  COUNT(*) AS num_obs,  AVG(sv.weight) AS avg_weight
+FROM surveys sv
+INNER JOIN species sp  ON sv.species_id = sp.species_id
+GROUP BY sv.species_id, sp.genus, sp.species, sp.taxa
+HAVING COUNT(*) < 5 AND COUNT(*) > 0
+ORDER BY num_obs DESC;
+
+dimensions for 1.h  
+dimensions for query 1.h are 11 rows and 6 columns
+
+1.i   
+SELECT  s.species_id,  s.genus,  s.species,  COUNT(sv.species_id) AS num_obs,  AVG(sv.weight) AS avg_weight
+FROM species s
+LEFT JOIN surveys sv  ON s.species_id = sv.species_id
+GROUP BY s.species_id, s.genus, s.species
+ORDER BY num_obs DESC;
+
+dimensions for 1.i
+dimensions for query 1.i are 54 rows and 5 columns
+
+1.j  
+SELECT  s.species_id,  s.genus,  s.species
+FROM species s
+LEFT JOIN surveys sv ON s.species_id = sv.species_id
+WHERE sv.species_id IS NULL
+ORDER BY s.species_id;
+
+dimensions for 1.j
+dimensions for query 1.j are 6 rows and 3 columns
+
+
